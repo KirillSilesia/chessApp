@@ -5,6 +5,8 @@ import javax.imageio.ImageIO;
 import java.io.IOException;
 import game.gameBoard;
 
+import java.awt.Graphics2D;
+
 public class piece {
 
     public BufferedImage image;
@@ -21,17 +23,19 @@ public class piece {
     }
     public BufferedImage getImage(String imagePath) {
         BufferedImage img = null;
-
         try {
+            // Load resource using classpath
             img = ImageIO.read(getClass().getResourceAsStream(imagePath));
             if (img == null) {
                 throw new IllegalArgumentException("Image not found: " + imagePath);
             }
-        }catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Failed to load image: " + imagePath, e);
+        }
+        return img;
     }
-    return img;
-}
+    
     public int getX(int col) {
         return col * gameBoard.SQUARE_SIZE;
     }   

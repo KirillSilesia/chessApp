@@ -7,10 +7,13 @@ public class king extends piece{
     public king(int Color, int col, int row) {
         super(Color, col, row);
 
+        System.out.println(getClass().getResource("/piece/w.king.png"));
+
+    
         if (Color == gamePanel.WHITE) {
-            image = getImage("/resources/piece/w.king.png");
+            image = getImage("/piece/w.king.png"); // Path starts with '/'
         } else if (Color == gamePanel.BLACK) {
-            image = getImage("/resources/piece/b.king.png");
+            image = getImage("/piece/b.king.png");
         }
     }
 }

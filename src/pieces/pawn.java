@@ -7,10 +7,14 @@ public class pawn extends piece{
     public pawn(int Color, int col, int row) {
         super(Color, col, row);
 
+        System.out.println(getClass().getResource("/piece/w.pawn.png"));
+
+    
         if (Color == gamePanel.WHITE) {
-            image = getImage("/resources/piece/w.pawn.png");
+            image = getImage("/piece/w.pawn.png"); // Path starts with '/'
         } else if (Color == gamePanel.BLACK) {
-            image = getImage("/resources/piece/b.pawn.png");
+            image = getImage("/piece/b.pawn.png");
         }
     }
+    
 }
