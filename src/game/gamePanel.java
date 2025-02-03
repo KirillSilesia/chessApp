@@ -5,14 +5,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 import javax.swing.JPanel;
-
-import pieces.piece;
-import pieces.pawn;
-import pieces.rook;
 import pieces.bishop;
-import pieces.knight;
 import pieces.king;
+import pieces.knight;
+import pieces.pawn;
+import pieces.piece;
 import pieces.queen;
+import pieces.rook;
 
 
 public class gamePanel extends JPanel implements Runnable{
@@ -20,11 +19,13 @@ public class gamePanel extends JPanel implements Runnable{
     public static final int WIDTH = 1100, HEIGHT = 800;
     final int FPS = 60;
     Thread gameThread;
+    mouse mouse = new mouse();
 
 
     //pieces
     public static ArrayList<piece> pieces = new ArrayList<>();
     public static ArrayList<piece> SimPieces = new ArrayList<>();
+    piece activeP;
 
     //color
     public static final int WHITE = 0, BLACK = 1;
@@ -33,6 +34,8 @@ public class gamePanel extends JPanel implements Runnable{
     public gamePanel(){
         setPreferredSize(new java.awt.Dimension(WIDTH, HEIGHT));
         setBackground(Color.black);
+        addMouseMotionListener(mouse);
+        addMouseListener(mouse);
 
         setPieces();
         copyPieces(pieces, SimPieces);
@@ -89,9 +92,68 @@ public class gamePanel extends JPanel implements Runnable{
         }
     }
 
-    private void update(){
 
+    
+
+    private void simulate() {
+        if (activeP != null) {
+            System.out.println("Moving piece: " + activeP.col + ", " + activeP.row);
+            activeP.x = mouse.x;
+            activeP.y = mouse.y;
+        } else {
+            System.out.println("simulate() called, but no active piece!");
+        }
     }
+    
+    
+
+
+    private void selectPiece() {
+        int mouseCol = mouse.x / gameBoard.SQUARE_SIZE;
+        int mouseRow = mouse.y / gameBoard.SQUARE_SIZE;
+    
+        System.out.println("Mouse clicked at: " + mouse.x + ", " + mouse.y);
+        System.out.println("Calculated grid position: " + mouseCol + ", " + mouseRow);
+    
+        boolean foundPiece = false;
+    
+        for (piece piece : SimPieces) {
+            System.out.println("Checking piece at: " + piece.col + ", " + piece.row);
+    
+            if (piece.Color == currentColor && piece.col == mouseCol && piece.row == mouseRow) {
+                activeP = piece;
+                foundPiece = true;
+                System.out.println("Piece selected: " + piece.col + ", " + piece.row);
+                break;
+            }
+        }
+    
+        if (!foundPiece) {
+            System.out.println("No piece found at this position!");
+        }
+    }
+    
+
+
+    //mouse pressed
+    private void update() {
+        
+        
+        if (mouse.pressed) {
+            if (activeP == null) { 
+                selectPiece();
+            } else { 
+                simulate();
+            }
+        } else {
+            activeP = null;
+        }
+    }
+    
+    
+    
+    
+    
 
     @Override
     protected void paintComponent(Graphics g){
